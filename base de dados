@@ -1,0 +1,176 @@
+
+"""
+ATIVIDADE: DESENVOLVIMENTO BASEADO EM COMPONENTES
+
+APP ESCOLHIDO:
+App 1 - Calculadora Simples com Componentes Reutilizáveis.
+
+CRITÉRIO DE COMPONENTE:
+Desenvolvimento dos componentes do zero, sem reutilizar
+bibliotecas externas para realizar as operações matemáticas.
+
+Os componentes foram desenvolvidos como funções independentes,
+permitindo sua reutilização em outros sistemas Python.
+
+INTERFACE:
+Biblioteca Click para criação da interface de linha de comando.
+"""
+
+import click
+
+
+# ============================================================
+# COMPONENTE 1 - OPERAÇÕES MATEMÁTICAS
+# ============================================================
+# Componente desenvolvido do zero.
+#
+# Este componente contém funções independentes para realizar
+# operações matemáticas básicas.
+#
+# As funções recebem dois números e retornam o resultado.
+# Podem ser reutilizadas em outros programas Python.
+
+
+def somar(numero1, numero2):
+    """
+    Realiza a adição de dois números.
+
+    Parâmetros:
+        numero1 (float): Primeiro número da operação.
+        numero2 (float): Segundo número da operação.
+
+    Retorno:
+        float: Resultado da adição.
+    """
+    return numero1 + numero2
+
+
+def subtrair(numero1, numero2):
+    """
+    Realiza a subtração de dois números.
+
+    Parâmetros:
+        numero1 (float): Primeiro número da operação.
+        numero2 (float): Segundo número da operação.
+
+    Retorno:
+        float: Resultado da subtração.
+    """
+    return numero1 - numero2
+
+
+# ============================================================
+# COMPONENTE 2 - OPERAÇÕES MATEMÁTICAS COMPLEMENTARES
+# ============================================================
+# Componente desenvolvido do zero.
+#
+# Contém as funções de multiplicação e divisão.
+# Assim como o primeiro componente, pode ser reutilizado
+# independentemente da interface de linha de comando.
+
+
+def multiplicar(numero1, numero2):
+    """
+    Realiza a multiplicação de dois números.
+
+    Parâmetros:
+        numero1 (float): Primeiro número da operação.
+        numero2 (float): Segundo número da operação.
+
+    Retorno:
+        float: Resultado da multiplicação.
+    """
+    return numero1 * numero2
+
+
+def dividir(numero1, numero2):
+    """
+    Realiza a divisão de dois números.
+
+    Parâmetros:
+        numero1 (float): Primeiro número da operação.
+        numero2 (float): Segundo número da operação.
+
+    Retorno:
+        float: Resultado da divisão.
+
+    Exceção:
+        ValueError: Quando o divisor é igual a zero.
+    """
+    if numero2 == 0:
+        raise ValueError("Não é possível dividir por zero.")
+
+    return numero1 / numero2
+
+
+# ============================================================
+# INTERFACE DE LINHA DE COMANDO - BIBLIOTECA CLICK
+# ============================================================
+# A interface permite que o usuário informe a operação e
+# os números que deseja utilizar.
+#
+# A biblioteca Click é reutilizada para receber os argumentos,
+# validar as opções e apresentar o resultado.
+#
+# A interface utiliza os componentes matemáticos definidos
+# anteriormente, sem implementar novamente suas operações.
+
+
+@click.command()
+@click.option(
+    "--operacao",
+    type=click.Choice(
+        ["somar", "subtrair", "multiplicar", "dividir"],
+        case_sensitive=False
+    ),
+    required=True,
+    help="Operação matemática que será realizada."
+)
+@click.option(
+    "--numero1",
+    type=float,
+    required=True,
+    help="Primeiro número da operação."
+)
+@click.option(
+    "--numero2",
+    type=float,
+    required=True,
+    help="Segundo número da operação."
+)
+def calculadora(operacao, numero1, numero2):
+    """
+    Executa a calculadora utilizando os componentes matemáticos.
+    """
+
+    # Seleciona o componente correspondente à operação.
+    if operacao == "somar":
+        resultado = somar(numero1, numero2)
+
+    elif operacao == "subtrair":
+        resultado = subtrair(numero1, numero2)
+
+    elif operacao == "multiplicar":
+        resultado = multiplicar(numero1, numero2)
+
+    elif operacao == "dividir":
+        try:
+            resultado = dividir(numero1, numero2)
+
+        except ValueError as erro:
+            raise click.ClickException(str(erro))
+
+    # Apresenta o resultado ao usuário.
+    click.echo(f"Resultado: {resultado}")
+
+
+# ============================================================
+# EXECUÇÃO DO PROGRAMA
+# ============================================================
+# Este bloco permite executar a calculadora diretamente
+# pelo terminal, sem interferir na reutilização das funções
+# matemáticas em outros programas.
+
+
+if __name__ == "__main__":
+    calculadora()
